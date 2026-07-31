@@ -182,7 +182,8 @@
 - **背景**：对照作业要求（通用 §3.2/§4.8）逐项检查发现两处缺口：容器分发未推送到公开 registry；CI 未构建镜像。用户裁决只补 1、4（PR 工作流与 commit message 标注两项维持现状，不补）。
 - **实现**：`.github/workflows/ci.yml` 新增 `docker-build` job——每次 push/pull_request 用 buildx 构建镜像（满足 §4.8「若选容器分发，CI 还须构建镜像」）；main 分支且存在 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` secret 时登录并推送 `docker.io/<用户名>/ai4se-harness:latest`（满足 §3.2「推送到公开 registry」）。README「Docker 分发」补公开镜像说明与手动 push 命令。凭据不硬编码（用户名/口令走 GitHub secret）。
 - **验证**：推送后由 GitHub Actions 运行（build 步骤全分支必跑；push 步骤在无 secret 时经 `if` 短路跳过，保证 CI 恒绿）。
-- **待用户动作**：注册 Docker Hub → 在仓库 Settings→Secrets 添加 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` → 下次 push main 即自动出公开镜像。
+- **Docker Hub 推送排障（重要过程证据）**：首次推送后 hub.docker.com 页面与 tags API 一直 404/"0 仓库"，但 CI 步骤恒 success。排查链：`username_len=10` + `username_matches_neilchen14=YES` 确认 secret 用户名精确等于 `neilchen14`；令牌 22:02 创建、22:40 被 CI 使用、账号邮箱 c2996187729@163.com 确认令牌归属；neilchen14 公开 API 0 仓库 → 一度怀疑镜像推到了别处。最终用注册表标准 token 流程（auth.docker.io 换 bearer token）请求 `registry.hub.docker.com/v2/neilchen14/ai4se-harness/manifests/latest` 返回 **HTTP 200 len=1992**，与推送日志 `size: 1992` 完全一致，后续 push 的 digest `5a44c882` 也证实 tag 在更新。结论：**镜像一直在 Docker Hub 上、公开可拉取**，404/"0 仓库" 是 Docker Hub 网页与 tags API 的元数据展示滞后（注册表 manifest 才是真相）；用户手动 Create Repository 后账号列表恢复正常（1 repo）。教训：验证 Docker Hub 仓库状态要以 registry manifest 为准，别信 tags/网页 API 的 404。
+- **结果**：公开镜像 `docker.io/neilchen14/ai4se-harness:latest` 已就绪（可 `docker pull` 验证），§3.2 公开 registry 与 §4.8 CI 构建镜像两项缺口全部闭环。
 - **问题与修正**：第一版 ci.yml 在 step 的 `if` 表达式里引用 `secrets.DOCKERHUB_USERNAME != ''`，GitHub Actions 报 `Unrecognized named-value: 'secrets'`，run `30635990281` failure（0 jobs，workflow 文件无效）。修正为把 secret 注入 step env、用 shell `[ -n "$DOCKERHUB_USERNAME" ] && [ -n "$DOCKERHUB_TOKEN" ]` 守卫推送；run `30636285990` 上 `docker-build`+`unit-test` 双 job success。教训：**GitHub Actions 的 secrets 上下文不能出现在任何 `if:` 表达式里**（job 与 step 均不可）。
 - **备注**：§4.7 的 PR 工作流与 commit message subagent 标注两项缺口按用户裁决不补，未作偏离记录。
 
