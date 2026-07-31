@@ -113,5 +113,15 @@
 - **问题与处理**：无。
 - **下一步**：T9 主循环 HarnessSession。
 
+## T9 — 主循环（HarnessSession）—— harness 内核核心
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/loop/prompt.ts`（`buildSystemPrompt`：工具列表 + 单 JSON 动作协议）+ `src/loop/session.ts`（`HarnessSession.run`：组装上下文→LLM→decode→GuardrailEngine→(ASK→HITL 审批)→ToolRegistry 分发→FeedbackClassifier→回灌→停机判断；`SessionEvent`/`SessionReport`/`abort`/`defaultResolve` 轮询审批）+ `tests/loop/session.test.ts`（7 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 7/7 通过）；`npm run build` 通过；`npm test` 全量 68/68 通过。
+- **关键决策**：停机四条件——`done` 工具 / 校验器 PASS 且本会话有过成功 `write_file` / 连续失败达 `maxFailures` / 步数达 `maxSteps`；BLOCK 与 DENIED/TIMED_OUT 均不执行工具只回灌原因；PASS 重置失败计数。
+- **问题与处理**：PLAN 缺陷修正——`defaultResolve` 原声明为 `async function`，返回的是 Promise<函数>，作为 `(req)` 调用会 TypeError；改为普通工厂函数返回闭包（仅默认路径触发，测试全注入 resolveApproval 故未暴露，静态审视发现）。
+- **下一步**：T10 Web 控制台（Node http + ws）。
+
 
 

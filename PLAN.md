@@ -2513,7 +2513,7 @@ async function defaultResolve(hitl: HITLStateMachine) {
 Run: `npx vitest run tests/loop/session.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T9 commit `c361bba`，7/7 通过，build 通过；PLAN 缺陷修正见 AGENT_LOG）
 
 ```bash
 git add src/loop tests/loop
