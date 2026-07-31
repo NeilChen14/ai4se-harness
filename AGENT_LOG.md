@@ -183,6 +183,7 @@
 - **实现**：`.github/workflows/ci.yml` 新增 `docker-build` job——每次 push/pull_request 用 buildx 构建镜像（满足 §4.8「若选容器分发，CI 还须构建镜像」）；main 分支且存在 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` secret 时登录并推送 `docker.io/<用户名>/ai4se-harness:latest`（满足 §3.2「推送到公开 registry」）。README「Docker 分发」补公开镜像说明与手动 push 命令。凭据不硬编码（用户名/口令走 GitHub secret）。
 - **验证**：推送后由 GitHub Actions 运行（build 步骤全分支必跑；push 步骤在无 secret 时经 `if` 短路跳过，保证 CI 恒绿）。
 - **待用户动作**：注册 Docker Hub → 在仓库 Settings→Secrets 添加 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` → 下次 push main 即自动出公开镜像。
+- **问题与修正**：第一版 ci.yml 在 step 的 `if` 表达式里引用 `secrets.DOCKERHUB_USERNAME != ''`，GitHub Actions 报 `Unrecognized named-value: 'secrets'`，run `30635990281` failure（0 jobs，workflow 文件无效）。修正为把 secret 注入 step env、用 shell `[ -n "$DOCKERHUB_USERNAME" ] && [ -n "$DOCKERHUB_TOKEN" ]` 守卫推送；run `30636285990` 上 `docker-build`+`unit-test` 双 job success。教训：**GitHub Actions 的 secrets 上下文不能出现在任何 `if:` 表达式里**（job 与 step 均不可）。
 - **备注**：§4.7 的 PR 工作流与 commit message subagent 标注两项缺口按用户裁决不补，未作偏离记录。
 
 
