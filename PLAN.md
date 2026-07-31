@@ -2838,7 +2838,7 @@ export class ConsoleServer {
 Run: `npx vitest run tests/console/server.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T10 commit `605bcd0`，7/7 通过，build 通过）
 
 ```bash
 git add src/console tests/console

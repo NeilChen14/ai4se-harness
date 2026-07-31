@@ -123,5 +123,15 @@
 - **问题与处理**：PLAN 缺陷修正——`defaultResolve` 原声明为 `async function`，返回的是 Promise<函数>，作为 `(req)` 调用会 TypeError；改为普通工厂函数返回闭包（仅默认路径触发，测试全注入 resolveApproval 故未暴露，静态审视发现）。
 - **下一步**：T10 Web 控制台（Node http + ws）。
 
+## T10 — Web 控制台（Node http + ws，四功能）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/console/server.ts`（`ConsoleServer`：Node http + ws，路由 /、/api/config（无密）、/api/sessions、/api/demo/run、approvals approve/deny、secrets GET/POST/DELETE，WS /ws 广播 SessionEvent；`SessionRunner` 接口 + FakeRunner 供测试）+ `src/console/static/index.html`（内联单页：配置只读/Demo/凭据/实时日志）+ `tests/console/server.test.ts`（7 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 7/7 通过）；`npm run build` 通过。
+- **关键决策**：port=0 时实际端口回显于 `url`；config API 只含 workspace/sandbox/budget/console/policy，无任何 key；静态页随 build 的 `cpSync` 拷入 dist。
+- **问题与处理**：移除 PLAN 实现中未使用的 `dirname, join` import；核实 `ws` 库实例也暴露 `OPEN` 常量（`c.readyState === c.OPEN` 可用）。
+- **下一步**：T11 Demo 模块与机制演示（§A.6）。
+
 
 
