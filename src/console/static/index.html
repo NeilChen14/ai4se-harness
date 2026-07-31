@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>AI4SE Harness Console</title></head>
+<body>
+  <h1>AI4SE Harness Console</h1>
+  <section>
+    <h2>配置（只读）</h2>
+    <pre id="cfg"></pre>
+  </section>
+  <section>
+    <h2>Demo</h2>
+    <button id="runDemo">运行 Demo 会话</button>
+    <ul id="sessions"></ul>
+  </section>
+  <section>
+    <h2>凭据管理</h2>
+    <form id="secretForm">
+      <input id="secretName" placeholder="name" required>
+      <input id="secretValue" type="password" placeholder="value" required>
+      <button type="submit">保存</button>
+    </form>
+    <ul id="secrets"></ul>
+  </section>
+  <section>
+    <h2>会话日志（实时）</h2>
+    <pre id="log" style="max-height:40vh;overflow:auto"></pre>
+  </section>
+  <script>
+    const $ = id => document.getElementById(id);
+    async function j(path, init) { const r = await fetch(path, init); return r.status === 204 ? null : r.json(); }
+    async function refresh() {
+      $('cfg').textContent = JSON.stringify(await j('/api/config'), null, 2);
+      const sess = await j('/api/sessions');
+      $('sessions').innerHTML = sess.map(s => `<li>${s.sessionId} — ${s.status} — ${s.task}</li>`).join('');
+      const sec = await j('/api/secrets');
+      $('secrets').innerHTML = sec.map(s => `<li>${s.name}: ${s.masked}</li>`).join('');
+    }
+    $('runDemo').onclick = async () => { await j('/api/demo/run', { method: 'POST' }); await refresh(); };
+    $('secretForm').onsubmit = async (e) => {
+      e.preventDefault();
+      await j('/api/secrets', { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ name: $('secretName').value, value: $('secretValue').value }) });
+      $('secretValue').value = ''; await refresh();
+    };
+    const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`);
+    ws.onmessage = e => { $('log').textContent += e.data + '\n'; };
+    refresh();
+  </script>
+</body>
+</html>
