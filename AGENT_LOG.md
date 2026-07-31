@@ -93,5 +93,15 @@
 - **问题与处理**：无。
 - **下一步**：T7 反馈模块（校验器 + FeedbackClassifier）。
 
+## T7 — 反馈模块（确定性校验器 + FeedbackClassifier）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/feedback/classifier.ts`（`FeedbackClassifier.classify` → PASS/COMPILE_ERROR/TEST_FAILURE/LINT_ERROR/TIMEOUT/OTHER + 摘要前 500 字符）+ `src/feedback/validators.ts`（`runTests`/`runTypecheck`/`makeParseFileValidator`）+ `tests/feedback/classifier.test.ts`（6 用例）+ `tests/feedback/validators.test.ts`（2 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 8/8 通过）；`npm run build` 通过。
+- **关键决策**：TIMEOUT 判定 = `exitCode===null` 且 error 含 `timed out`，优先级最高；分类顺序 PASS→run_tests/typecheck/lint→OTHER；`detail` 取 error 或输出前 10 行。
+- **问题与处理**：无。
+- **下一步**：T8 记忆模块（MemoryStore jsonl）。
+
 
 

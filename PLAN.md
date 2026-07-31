@@ -1900,7 +1900,7 @@ export async function makeParseFileValidator(
 Run: `npx vitest run tests/feedback`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T7 commit `7c461b4`，8/8 通过，build 通过）
 
 ```bash
 git add src/feedback tests/feedback
