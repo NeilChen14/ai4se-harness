@@ -3177,7 +3177,7 @@ export async function main(argv = process.argv): Promise<void>;
   - `policy validate <file>`：JSON 解析 + `GuardrailEngine.validate`，非法退出非零。
 - 非交互 `run`（无 --task）→ 报错退出 1。
 
-- [ ] **Step 1: 写失败测试 `tests/cli/cli.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/cli/cli.test.ts`**（修正：`run` 辅助改为 `program.parseAsync(args, { from: 'user' })`，见 AGENT_LOG）
 
 ```ts
 import { describe, expect, it, beforeEach } from 'vitest';
@@ -3233,12 +3233,12 @@ describe('CLI', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/cli/cli.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**（修正：`policy validate` 用显式嵌套子命令 + action 内 `program.error()` 路由错误；`exitOverride` 回调只设 `process.exitCode`；`readHidden` 避免 `rl.output` 类型问题，见 AGENT_LOG）
 
 `src/governance/store.ts`：
 
@@ -3505,12 +3505,12 @@ if (isDirectRun) {
   void main();
 }
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/cli/cli.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**：T12 commit `0c9e402`，5/5 通过，build 通过，全量 84/84
 
 ```bash
 git add src/cli.ts src/cli src/session src/governance/store.ts tests/cli

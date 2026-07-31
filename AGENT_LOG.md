@@ -143,5 +143,15 @@
 - **问题与处理**：无。
 - **下一步**：T12 CLI 入口（commander）。
 
+## T12 — CLI 入口（commander）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/governance/store.ts`（`InMemoryRequestStore`）、`src/session/recorder.ts`（`SessionRecorder.write` → `sessions/<id>.jsonl`，每行一个 StepRecord + 末行汇总）、`src/cli/input.ts`（`readHidden` 掩码 / `readLine`）、`src/cli.ts`（`createProgram`/`main`/`CliDeps`：`init`、`run [--task <t>] [--config <p>] [--demo]`、`console [--port] [--host]`、`secrets init/set/get/unset/list`、`policy validate <file>`；`isDirectRun` 判定直跑）+ `tests/cli/cli.test.ts`（5 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 5/5 通过）；`npm run build` 通过；`npm test` 全量 84/84 通过；CLI 手工验证——`init` 生成配置与 .gitignore、`policy validate` 合法退出 0 / 非法退出 1、`run --demo` 三行机制演示 + sessions jsonl + 退出 0、未知命令退出 1、`run` 无 task 报错退出 1。
+- **关键决策**：`policy validate` 用显式嵌套子命令 `program.command('policy').command('validate <file>')`；action 内校验失败走顶层 `program.error()`，使非零退出码经 commander `exitOverride` 统一处理（真实 CLI 设 `process.exitCode`，测试可注入回调断言 code≠0）；`run` 真实 LLM 路径走 `SecretStore`（`openai` 键）+ `cliApprover`（非 TTY 自动 DENIED，TTY 读 `y/N`）+ `SessionRecorder`。
+- **问题与处理**：PLAN 缺陷修正四处——① 测试 `run` 辅助 `['node','cli.js',...args]` 配 `{from:'user'}` 会把 `node` 当字面参数报 unknown command，改为 `program.parseAsync(args, { from: 'user' })`；② 动作抛错不触发 `exitOverride`（直接向外传播），`policy validate` 非法用例断言 code≠0 需 action 内 `program.error()` 路由；③ `exitOverride` 回调原样打印 `error:` 会造成与 commander `error()` 自身输出重复，改为只设 `process.exitCode`；④ `rl.output` 在 @types/node 的 `Interface` 类型上不存在，`readHidden` 改为持有 `process.stdout` 引用。
+- **下一步**：T13 打包/README/CI 收尾（含 npm audit 复核）。
+
 
 
