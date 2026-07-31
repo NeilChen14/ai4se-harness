@@ -1,0 +1,4 @@
+[
+  { "id": "no-rm-rf", "tier": "BLOCK", "match": { "type": "regex", "pattern": "rm -rf" }, "reason": "destructive command blocked" },
+  { "id": "ask-write", "tier": "ASK", "match": { "type": "exact", "pattern": "write_file" }, "reason": "file modification needs approval" }
+]
