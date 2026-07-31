@@ -56,12 +56,12 @@ docker build -t ai4se-harness .
 docker run -p 8117:8117 ai4se-harness        # mock demo 控制台
 ```
 
-**公开镜像（Docker Hub）**：CI 在 main 分支每次 push 时自动构建并推送 `docker.io/<你的DockerHub用户名>/ai4se-harness:latest`（前提：仓库配置 `DOCKERHUB_USERNAME` 与 `DOCKERHUB_TOKEN` 两个 secret）。手动推送：
+**公开镜像（Docker Hub）**：CI 在 main 分支每次 push 时自动构建并推送 `docker.io/neilchen14/ai4se-harness:latest`（前提：仓库配置 `DOCKERHUB_USERNAME` 与 `DOCKERHUB_TOKEN` 两个 secret）。手动推送：
 
 ```bash
-docker build -t <你的DockerHub用户名>/ai4se-harness:latest .
+docker build -t neilchen14/ai4se-harness:latest .
 docker login                                   # 输入 Docker Hub 账号密码
-docker push <你的DockerHub用户名>/ai4se-harness:latest
+docker push neilchen14/ai4se-harness:latest
 ```
 
 真实 LLM 时需把主密码加密的凭据文件挂进容器并注入主密码（权衡：容器内读写凭据与挂载路径需自行管理）：
