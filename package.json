@@ -1,0 +1,22 @@
+{
+  "name": "ai4se-harness",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "ai4se-harness": "dist/cli.js" },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc -p tsconfig.build.json && node -e \"const fs=require('node:fs');fs.cpSync('src/demo/project','dist/demo/project',{recursive:true});fs.cpSync('src/console/static','dist/console/static',{recursive:true})\"",
+    "demo": "tsx src/demo/demo.ts",
+    "dev": "tsx src/cli.ts"
+  },
+  "dependencies": { "commander": "^12.1.0", "ws": "^8.18.0" },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
