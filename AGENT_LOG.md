@@ -163,5 +163,16 @@
 - **问题与处理**：`npm audit` 复核——原 5 个漏洞（3 moderate/1 high/1 critical）全在 dev 工具链传递依赖（vitest/vite/vite-node/esbuild，仅影响 `test:watch` dev server）；最终处理：`vitest` 升级 `^2.1.8 → ^4.1.10`（仓库仅用基础 `describe/it/expect` API，v4 兼容，Node 20 满足 engines），`npm audit` 归零、84/84 测试与 build 全绿，无 `--force` 破坏性修复。
 - **下一步**：无（T1–T13 全部完成）。若需最终 CI 证据，用户授权后 `git push` 由 GitHub Actions `unit-test` job 判定。
 
+## T14 — 云端只读模式（公网 mock demo 前置，T1–T13 之后追加）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **背景**：T13 交付后，公网 WebUI（SPEC §7/§10-R3/偏离记录 2）仍是待办；用户尚未申请服务器。原 `console` 子命令强制要求本机存在已初始化 secrets 文件，否则启动即失败，且不提供凭据只读态——云端 mock demo 无法直接运行。
+- **实现**：`ConsoleServerOptions` 增 `readonly?: boolean`；`route()` 中 `readonly` 时 GET /api/secrets 返回 `[]`（不触碰 SecretStore，允许未初始化文件）、POST/DELETE /api/secrets 返回 403、/api/config 附 `readonly` 字段；`src/cli.ts` console 子命令读 `AI4SE_READONLY=1` 门控（跳过 secrets 初始化检查、传入 readonly、启动日志注明 read-only）；`src/console/static/index.html` 只读时显示横幅并隐藏凭据表单；`README.md` 增「云端部署」章节与 `AI4SE_READONLY` 文档。
+- **验证**：TDD 红→绿（tests/console/server.test.ts 新增 4 用例：config 带 readonly / 未初始化 store 下 GET secrets 返回 [] / POST、DELETE 403 → 11/11 通过）；`npm test` 全量 88/88；`npm run build` 通过；手工端到端——无 secrets 文件 + `AI4SE_READONLY=1` 启动 console，/api/config 含 `readonly:true`、GET /api/secrets 为空、POST 403。
+- **关键决策**：只读模式以环境变量授权（SPEC §4-T4「开真实 LLM 需环境变量授权开关」反向应用）；云端不接真实 LLM、不接收任何 key，凭据 API 服务端强制 403 而非仅隐藏 UI。
+- **问题与处理**：发现既有缺口——非只读 console 的 GET/POST /api/secrets 因 store 未 unlock 会抛 `SecretStore.requireKey`（`'store is locked'`），本地凭据管理在 Web UI 上实际不可用；不在本次范围内，未改动，记录备查。
+- **下一步**：申请免费服务器（Render 优先）→ 按 README「云端部署」部署 → 公网 URL 验收三行 demo + 只读横幅。
+
 
 

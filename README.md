@@ -47,6 +47,8 @@ ai4se-harness console           # 默认 http://127.0.0.1:8117
 
 控制台提供会话流实时日志（WS）、Demo 一键运行、审批、凭据查看与配置只读页。默认绑定 `127.0.0.1`。
 
+**只读模式（云端 demo）**：设置环境变量 `AI4SE_READONLY=1` 启动 console 时，不要求本机存在凭据文件，凭据 API 一律只读（GET 返回空、POST/DELETE 返回 403），页面隐藏凭据表单并显示只读横幅；适合部署为公网 mock demo 实例（见「云端部署」）。
+
 ## Docker 分发
 
 ```bash
@@ -61,6 +63,17 @@ docker run -p 8117:8117 \
   -v ~/.ai4se-harness:/root/.ai4se-harness \
   ai4se-harness
 ```
+
+## 云端部署（公网 mock demo）
+
+镜像内不内嵌任何 key，云端实例以 `AI4SE_READONLY=1` 运行，只提供 mock demo 与只读页面。以 Render 免费 Web Service 为例：
+
+1. 把仓库推到 GitHub，在 Render 新建 **Web Service**，选择该仓库与分支。
+2. Build 命令：`docker build -t ai4se-harness .`；Start 命令：`docker run -p 8117:8117 -e AI4SE_READONLY=1 ai4se-harness`（或直接在服务的环境变量里设 `AI4SE_READONLY=1`）。
+3. 平台自动分配公网 URL 并配 TLS（https）。
+4. **验收**：打开公网 URL → 页面显示只读横幅、凭据表单隐藏；点「运行 Demo 会话」应输出 ① 拦截 `rm -rf` ② 失败反馈改步 ③ HITL 审批三行日志。凭据 API 写入应返回 403。
+
+> 安全：公网实例不开真实 LLM、不接收任何 key（SPEC §4-T4）。开放真实 LLM 需额外授权开关 + TLS 并在反向代理层处理，默认不建议。
 
 ## 凭据安全
 

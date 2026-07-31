@@ -85,3 +85,46 @@ describe('ConsoleServer', () => {
     expect(list).toHaveLength(0);
   });
 });
+
+describe('ConsoleServer readonly mode', () => {
+  let server: ConsoleServer;
+  let runner: FakeRunner;
+
+  beforeEach(async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'ai4se-console-ro-'));
+    runner = new FakeRunner();
+    server = new ConsoleServer({
+      port: 0, host: '127.0.0.1', runner,
+      secrets: new SecretStore(join(dir, 'secrets.json')), // 未初始化：只读模式不得要求凭据文件
+      config: cfg(dir), readonly: true,
+    });
+    await server.start();
+  });
+
+  afterEach(async () => { await server.stop(); });
+
+  const get = (p: string) => fetch(`${server.url}${p}`);
+  const post = (p: string, body?: unknown) => fetch(`${server.url}${p}`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  it('/api/config advertises readonly', async () => {
+    const body = await (await get('/api/config')).json();
+    expect(body.readonly).toBe(true);
+  });
+  it('GET /api/secrets returns empty list without an initialized store', async () => {
+    const res = await get('/api/secrets');
+    expect(res.ok).toBe(true);
+    expect(await res.json()).toEqual([]);
+  });
+  it('POST /api/secrets is rejected in readonly mode', async () => {
+    const res = await post('/api/secrets', { name: 'openai', value: 'sk-abc12345' });
+    expect(res.status).toBe(403);
+  });
+  it('DELETE /api/secrets/:name is rejected in readonly mode', async () => {
+    const res = await fetch(`${server.url}/api/secrets/openai`, { method: 'DELETE' });
+    expect(res.status).toBe(403);
+  });
+});

@@ -17,6 +17,7 @@ export interface SessionRunner {
 export interface ConsoleServerOptions {
   port: number; host: string;
   runner: SessionRunner; secrets: SecretStore; config: HarnessConfig;
+  readonly?: boolean; // 只读模式（云端 mock demo）：凭据 API 只读、不要求凭据文件
 }
 
 function readBody(req: IncomingMessage): Promise<string> {
@@ -71,9 +72,10 @@ export class ConsoleServer {
     runner: SessionRunner, secrets: SecretStore, config: HarnessConfig): Promise<void> {
     const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
     const p = url.pathname;
+    const readonly = this.opts.readonly === true;
     if (req.method === 'GET' && p === '/') { res.writeHead(200, { 'content-type': 'text/html' }); res.end(readFileSync(staticPath)); return; }
     if (req.method === 'GET' && p === '/api/config') {
-      return json(res, 200, { workspace: config.workspace, sandbox: config.sandbox, budget: config.budget, console: config.console, policy: config.policy });
+      return json(res, 200, { workspace: config.workspace, sandbox: config.sandbox, budget: config.budget, console: config.console, policy: config.policy, readonly });
     }
     if (req.method === 'GET' && p === '/api/sessions') return json(res, 200, await runner.list());
     if (req.method === 'POST' && p === '/api/demo/run') return json(res, 200, { sessionId: await runner.startDemo() });
@@ -83,14 +85,19 @@ export class ConsoleServer {
       if (act === 'approve') await runner.approve(id); else await runner.deny(id);
       return json(res, 200, { ok: true });
     }
-    if (req.method === 'GET' && p === '/api/secrets') return json(res, 200, await secrets.list());
+    if (req.method === 'GET' && p === '/api/secrets') {
+      if (readonly) return json(res, 200, []);
+      return json(res, 200, await secrets.list());
+    }
     if (req.method === 'POST' && p === '/api/secrets') {
+      if (readonly) return json(res, 403, { error: 'read-only mode' });
       const body = JSON.parse(await readBody(req)) as { name?: string; value?: string };
       if (!body.name || typeof body.value !== 'string') return json(res, 400, { error: 'name and value required' });
       await secrets.set(body.name, body.value);
       return json(res, 200, { ok: true });
     }
     if (req.method === 'DELETE' && p.startsWith('/api/secrets/')) {
+      if (readonly) return json(res, 403, { error: 'read-only mode' });
       const name = decodeURIComponent(p.slice('/api/secrets/'.length));
       await secrets.unset(name);
       return json(res, 200, { ok: true });

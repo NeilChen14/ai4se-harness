@@ -3,6 +3,7 @@
 <head><meta charset="utf-8"><title>AI4SE Harness Console</title></head>
 <body>
   <h1>AI4SE Harness Console</h1>
+  <p id="banner" style="display:none;color:#b00">只读模式（云端 mock demo）——不存储、不展示任何凭据。</p>
   <section>
     <h2>配置（只读）</h2>
     <pre id="cfg"></pre>
@@ -29,7 +30,14 @@
     const $ = id => document.getElementById(id);
     async function j(path, init) { const r = await fetch(path, init); return r.status === 204 ? null : r.json(); }
     async function refresh() {
-      $('cfg').textContent = JSON.stringify(await j('/api/config'), null, 2);
+      const cfg = await j('/api/config');
+      $('cfg').textContent = JSON.stringify(cfg, null, 2);
+      if (cfg.readonly) {
+        $('banner').style.display = 'block';
+        $('secretForm').style.display = 'none';
+        $('secretName').removeAttribute('required');
+        $('secretValue').removeAttribute('required');
+      }
       const sess = await j('/api/sessions');
       $('sessions').innerHTML = sess.map(s => `<li>${s.sessionId} — ${s.status} — ${s.task}</li>`).join('');
       const sec = await j('/api/secrets');

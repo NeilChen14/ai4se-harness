@@ -113,13 +113,14 @@ export function createProgram(deps: CliDeps = {}): Command {
     .option('--port <n>', 'port', (v) => parseInt(v, 10), 8117)
     .option('--host <s>', 'host', '127.0.0.1')
     .action(async (opts) => {
+      const readonly = process.env.AI4SE_READONLY === '1';
       const secrets = new SecretStore(storePath);
-      if (!(await secrets.isInitialized())) throw new Error('secrets not initialized; run: ai4se-harness secrets init');
+      if (!readonly && !(await secrets.isInitialized())) throw new Error('secrets not initialized; run: ai4se-harness secrets init');
       const cfgPath = deps.configPath ?? 'harness.config.json';
       const config = existsSync(cfgPath) ? loadConfig(cfgPath) : { ...defaultConfig(), workspace: '.' };
-      const server = new ConsoleServer({ port: opts.port, host: opts.host, runner: new DemoSessionRunner(), secrets, config });
+      const server = new ConsoleServer({ port: opts.port, host: opts.host, runner: new DemoSessionRunner(), secrets, config, readonly });
       await server.start();
-      console.log(`console at ${server.url}`);
+      console.log(`console at ${server.url}${readonly ? ' (read-only mock demo, no credentials exposed)' : ''}`);
       await new Promise<void>(() => { /* SIGINT */ });
     });
 
