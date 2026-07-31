@@ -160,7 +160,7 @@
 - **实现**：`Dockerfile`（两阶段：build 阶段 `npm ci` + `npm run build`；runtime 阶段 `npm ci --omit=dev` + `COPY dist`，`CMD node dist/cli.js console` 监听 0.0.0.0:8117）、`.dockerignore`（node_modules/dist/sessions/.env/secrets/.git）、`.gitlab-ci.yml`（unit-test 模板，NJU GitLab 镜像备选，不作为主 CI）、`README.md`（覆盖原 36B UTF-16 占位 stub；含简介/安装/运行/控制台/Docker 分发/凭据安全/安全边界/目录结构/已知限制，如实标注"代码级围栏非 OS 级隔离"）、`REFLECTION.md`（反思，纯汉字 1520 字）；`src/cli.ts` 补首行 shebang（npm 全局 bin 在 Unix 需可直执行）。
 - **验证**：`npm test` 84/84 全绿；`npm run build` 通过且 `dist/cli.js` 首行为 shebang；`npm run demo` 输出三行证据（① BLOCK rm -rf ② TEST_FAILURE→write_file ③ HITL APPROVED）status=done 退出 0；`node dist/cli.js --help` 与 `node dist/cli.js run --demo` 均退出 0（构建产物独立可跑）；`git grep -E "(sk-[A-Za-z0-9]{10,}|AI4SE_.*=.+)"` 仅命中文档示例无真实 key；五交付物（SPEC/PLAN/SPEC_PROCESS/AGENT_LOG/REFLECTION）齐，git log 逐 task 有 commit。
 - **关键决策**：README 安全边界如实声明"代码级围栏 + Docker 可选强隔离"（SPEC R4/R7）；`REFLECTION.md` 按"纯汉字计数"达标（1520 ≥ 1500）；T1 的 Step 5 勾选为冷启动遗留缺口（SPEC_PROCESS §4.4 已记）一并补全；T13 Step 4 第 5 项「push 触发 GitHub Actions」需用户授权推送，本地以 `npm test` 等价验证。
-- **问题与处理**：`npm audit` 复核——5 个漏洞（3 moderate/1 high/1 critical）全在 dev 工具链传递依赖（vitest/vite/vite-node/esbuild，仅影响 `test:watch` dev server），`npm audit fix --dry-run` 确认无非破坏性修复（需 vitest 4 大版本升级），不影响运行时与打包产物，按 T1 记录口径不阻塞、不强行 `--force`。
+- **问题与处理**：`npm audit` 复核——原 5 个漏洞（3 moderate/1 high/1 critical）全在 dev 工具链传递依赖（vitest/vite/vite-node/esbuild，仅影响 `test:watch` dev server）；最终处理：`vitest` 升级 `^2.1.8 → ^4.1.10`（仓库仅用基础 `describe/it/expect` API，v4 兼容，Node 20 满足 engines），`npm audit` 归零、84/84 测试与 build 全绿，无 `--force` 破坏性修复。
 - **下一步**：无（T1–T13 全部完成）。若需最终 CI 证据，用户授权后 `git push` 由 GitHub Actions `unit-test` job 判定。
 
 
