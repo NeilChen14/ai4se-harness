@@ -83,5 +83,15 @@
 - **问题与处理**：无。
 - **下一步**：T6d HITL 审批状态机。
 
+## T6d — 治理 · HITL 审批状态机（HITLStateMachine）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/governance/hitl.ts`（`HITLStateMachine`：request 建 PENDING → approve/deny/timeout 迁移，幂等 + 终态拒绝；`sweepExpired` 按 ttl 批量 TIMED_OUT）+ `tests/helpers/inmem.ts`（InMemoryStore 实现 RequestStore）+ `tests/governance/hitl.test.ts`（8 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 8/8 通过）；`npm run build` 通过。
+- **关键决策**：仅 PENDING 可迁移；对目标态幂等返回当前；`decidedBy` 入 ActionRequest 接口；默认 TTL 120_000ms（SPEC M5）。
+- **问题与处理**：无。
+- **下一步**：T7 反馈模块（校验器 + FeedbackClassifier）。
+
 
 

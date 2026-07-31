@@ -1716,7 +1716,7 @@ export class HITLStateMachine {
 Run: `npx vitest run tests/governance/hitl.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T6d commit `374277d`，8/8 通过，build 通过）
 
 ```bash
 git add src/governance/hitl.ts tests/governance/hitl.test.ts tests/helpers/inmem.ts
