@@ -175,5 +175,15 @@
 - **部署结果**：Render 免费 Web Service 上线，公网 URL **https://ai4se-harness.onrender.com**（Runtime=Docker，`AI4SE_READONLY=1`）。验收全部通过：`/api/config` 返回 `readonly:true`；`GET /api/secrets` 空；`POST /api/secrets` 403；页面 UTF-8 正常、只读横幅显示、凭据表单隐藏；公网触发 Demo 会话两次均 `status:done`，日志复现 ① step-0 `BLOCK no-rm-rf` 拦截 `rm -rf` ② step-1 测试失败反馈 ③ step-2 `ASK ask-write` HITL 审批。
 - **下一步**：无（SPEC §7/§10-R3/偏离记录 2 的公网云端 WebUI demo 交付完成，交付闭环）。
 
+## T15 — 补齐交付清单缺口 1/4（Docker 公开 registry + CI 构建镜像）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **背景**：对照作业要求（通用 §3.2/§4.8）逐项检查发现两处缺口：容器分发未推送到公开 registry；CI 未构建镜像。用户裁决只补 1、4（PR 工作流与 commit message 标注两项维持现状，不补）。
+- **实现**：`.github/workflows/ci.yml` 新增 `docker-build` job——每次 push/pull_request 用 buildx 构建镜像（满足 §4.8「若选容器分发，CI 还须构建镜像」）；main 分支且存在 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` secret 时登录并推送 `docker.io/<用户名>/ai4se-harness:latest`（满足 §3.2「推送到公开 registry」）。README「Docker 分发」补公开镜像说明与手动 push 命令。凭据不硬编码（用户名/口令走 GitHub secret）。
+- **验证**：推送后由 GitHub Actions 运行（build 步骤全分支必跑；push 步骤在无 secret 时经 `if` 短路跳过，保证 CI 恒绿）。
+- **待用户动作**：注册 Docker Hub → 在仓库 Settings→Secrets 添加 `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` → 下次 push main 即自动出公开镜像。
+- **备注**：§4.7 的 PR 工作流与 commit message subagent 标注两项缺口按用户裁决不补，未作偏离记录。
+
 
 
