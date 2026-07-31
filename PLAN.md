@@ -1357,7 +1357,7 @@ export class ScopeFence {
 Run: `npx vitest run tests/governance/scope.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T6b commit `cc11eaf`，4/4 通过，build 通过）
 
 ```bash
 git add src/governance/scope.ts tests/governance/scope.test.ts

@@ -43,5 +43,15 @@
 - **问题与处理**：无。
 - **下一步**：T5 工具层。
 
+## T6b — 治理 · 范围围栏（ScopeFence）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/governance/scope.ts`（`ScopeFence`：roots 绝对化 + 存在时 `realpath` 规范化，win32 忽略大小写；`resolve` 拒绝 `..` 逃逸、绝对路径越界、符号链接逃逸）+ `tests/governance/scope.test.ts`（4 用例，含符号链接逃逸，平台不支持时跳过）。
+- **验证**：TDD 红→绿（模块不存在 → 4/4 通过）；`npm run build` 通过。
+- **关键决策**：T5 工具层依赖 T6b/T6c，经询问用户裁定先做 T6b/T6c 再做 T5；比较用 `root + sep` 前缀法避免 `/tmp/foo` 与 `/tmp/foobar` 误判。
+- **问题与处理**：无。
+- **下一步**：T6c 进程执行器。
+
 
 
