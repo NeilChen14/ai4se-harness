@@ -23,8 +23,6 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          echo "username_len=${#DOCKERHUB_USERNAME}"
-          [ "$DOCKERHUB_USERNAME" = "neilchen14" ] && echo "username_matches_neilchen14=YES" || echo "username_matches_neilchen14=NO"
           if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
             echo "::warning::DOCKERHUB_USERNAME or DOCKERHUB_TOKEN secret is empty - push skipped"
             exit 0
