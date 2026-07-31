@@ -205,7 +205,7 @@ git add -A
 git commit -m "chore(T1): project scaffold, shared types, vitest, CI"
 ```
 
-- [ ] **Step 6: 更新 PLAN.md**（勾选 Task 1，记录 `git rev-parse --short HEAD`）与 `AGENT_LOG.md`，提交。
+- [x] **Step 6: 更新 PLAN.md**（勾选 Task 1，记录 `git rev-parse --short HEAD`）与 `AGENT_LOG.md`，提交。T1 commit（cherry-pick 自冷启动）`bcf67a6`，`npm test` 1/1 通过。
 
 ---
 
