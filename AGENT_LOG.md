@@ -73,5 +73,15 @@
 - **问题与处理**：按用户裁定先合入 T6b/T6c 再实现 T5，ScopeFence/ProcessExecutor 直接复用正式实现，无临时代码。
 - **下一步**：T6a 护栏规则引擎（cherry-pick 冷启动已验证代码）。
 
+## T6a — 治理 · 护栏规则引擎（GuardrailEngine）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：cherry-pick 自冷启动 `cold-start/t1-t6a` commit `4b3afd7` → `f0a1b62`（`src/governance/guardrail.ts` + `tests/governance/guardrail.test.ts`），与 PLAN 代码逐字一致，无改写。
+- **验证**：6/6 通过；`npm run build` 通过。
+- **关键决策**：`run_command` 匹配目标 = command 字符串，其余工具 = 工具名；`path` 型规则匹配 `args.path`；优先级 BLOCK>ASK>ALLOW，同级取首条；无命中 → `{tier:'ALLOW', reason:'no rule matched'}`。
+- **问题与处理**：无。
+- **下一步**：T6d HITL 审批状态机。
+
 
 

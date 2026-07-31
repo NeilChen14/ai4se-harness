@@ -1232,7 +1232,7 @@ export class GuardrailEngine {
 Run: `npx vitest run tests/governance/guardrail.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T6a cherry-pick 自冷启动 `4b3afd7` → commit `f0a1b62`，6/6 通过，build 通过）
 
 ```bash
 git add src/governance/guardrail.ts tests/governance/guardrail.test.ts
