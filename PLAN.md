@@ -845,7 +845,7 @@ export class OpenAICompatClient implements LLMClient {
 Run: `npx vitest run tests/llm`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T4 commit `76e5ebd`，8/8 通过，build 通过）
 
 ```bash
 git add src/llm tests/llm

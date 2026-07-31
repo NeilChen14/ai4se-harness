@@ -33,4 +33,15 @@
 - **问题与处理**：PLAN 实现代码中 `store.ts` 误从 `node:fs` import `randomBytes`（实际在 `node:crypto`）→ 已改为 `node:crypto` 导入（计划小修正）。
 - **下一步**：T4 llm 抽象层。
 
+## T4 — LLM 抽象层（client/decode/mock/openai）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/llm/client.ts`（`LLMClient`/`LLMMessage`/`LLMResult`）、`decode.ts`（`decodeAction` + `FormatError`）、`mock.ts`（`MockLLM` 脚本回放/函数式脚本/耗尽报错）、`openai.ts`（OpenAI 兼容 `chat/completions`，Bearer auth + 5xx 重试 + 可注入 fetch）。
+- **验证**：TDD 红→绿（3 组 8/8 通过）；`npm run build` 通过。
+- **关键决策**：mock 脚本耗尽抛 `FormatError('mock scripts exhausted')`（供 T9 停机/失败计数复用）；重试默认 3 次。
+- **问题与处理**：无。
+- **下一步**：T5 工具层。
+
+
 
