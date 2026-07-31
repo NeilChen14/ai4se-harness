@@ -133,5 +133,15 @@
 - **问题与处理**：移除 PLAN 实现中未使用的 `dirname, join` import；核实 `ws` 库实例也暴露 `OPEN` 常量（`c.readyState === c.OPEN` 可用）。
 - **下一步**：T11 Demo 模块与机制演示（§A.6）。
 
+## T11 — Demo 模块与机制演示（§A.6）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/demo/project/`（`sum.js` 故意错误、`sum.test.js`、`policy.json`、`package.json` type:module）+ `src/demo/demo.ts`（`DEMO_SCRIPT` 5 步、`demoPolicy`/`demoTools`/`buildDemoSession`/`runDemo`/`DemoSessionRunner`，运行时复制工程到临时目录保证可重复）+ `tests/demo/demo.test.ts`（4 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 4/4 通过）；`npm run build` 通过；`npm test` 全量 79/79 通过；`npm run demo` 输出三行为证据：① BLOCKED rm -rf ② TEST_FAILURE at step 1 → next write_file ③ HITL PENDING->APPROVED, executed=true，status=done。
+- **关键决策**：`buildDemoSession` 的 `resolveApproval` 固定 `auto`/`deny`（demo 全自动）；手动审批完整路径留待 T12 非 demo 模式 `cliApprover`；`isDirectRun` 判定兼容 win32 路径大小写/分隔符。
+- **问题与处理**：无。
+- **下一步**：T12 CLI 入口（commander）。
+
 
 

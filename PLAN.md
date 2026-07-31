@@ -3125,7 +3125,7 @@ if (isDirectRun) {
 Run: `npx vitest run tests/demo/demo.test.ts`
 Expected: PASS（demo 内含真实 `node --test` 执行，需 Node ≥ 20）。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T11 commit `82ea50d`，4/4 通过，build 通过，`npm run demo` 三行为证据齐全）
 
 ```bash
 git add src/demo tests/demo
