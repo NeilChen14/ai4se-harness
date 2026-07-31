@@ -1081,7 +1081,7 @@ export const doneTool: Tool = {
 Run: `npx vitest run tests/tools/registry.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T5 commit `632bd46`，5/5 通过，build 通过）
 
 ```bash
 git add src/tools tests/tools

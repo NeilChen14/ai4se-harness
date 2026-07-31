@@ -63,5 +63,15 @@
 - **问题与处理**：无。
 - **下一步**：T5 工具层。
 
+## T5 — 工具层（Tool 接口 + 注册表 + 文件/命令工具）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/tools/registry.ts`（`Tool`/`ToolContext`/`ToolRegistry`：按名分发、schema 参数校验、invoke 永不 throw）、`file.ts`（`readFileTool`/`writeFileTool`，经 `ScopeFence.resolve` + 原子写 rename）、`run.ts`（`runCommandTool`/`runTestsTool`/`runTypecheckTool`/`runLintTool`/`doneTool`，`ProcessExecutor` + envFilter + 30s 超时 + 1MB 截断）+ `tests/tools/registry.test.ts`（5 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 5/5 通过）；`npm run build` 通过；`npm test` 全量 35/35 通过。
+- **关键决策**：`dispatch` 对 schema 缺参/类型错返回 `{ok:false}` 而非 throw；仅未知工具 throw `ToolError`；run 系列工具 cwd=workdir 拘禁。
+- **问题与处理**：按用户裁定先合入 T6b/T6c 再实现 T5，ScopeFence/ProcessExecutor 直接复用正式实现，无临时代码。
+- **下一步**：T6a 护栏规则引擎（cherry-pick 冷启动已验证代码）。
+
 
 
