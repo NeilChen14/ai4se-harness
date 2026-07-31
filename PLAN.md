@@ -50,7 +50,7 @@ T1 Foundation
 - Consumes: 无（本项目第一个 task）。
 - Produces: 共享类型（所有后续 task 引用）——`src/types.ts` 导出 `Tier`、`SessionStatus`、`FeedbackCategory`、`AgentAction`、`Decision`、`ToolResult`、`Feedback`、`StepRecord`。
 
-- [ ] **Step 1: 写失败测试 `tests/smoke.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/smoke.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -66,12 +66,12 @@ describe('shared types', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npm test`
 Expected: FAIL（`src/types.ts` 不存在 / 模块找不到）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/types.ts`：
 
@@ -193,7 +193,7 @@ jobs:
 
 `src/index.ts`：`export * from './types.js';`
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npm install && npm test`
 Expected: PASS（1 条 smoke 测试）。
@@ -243,7 +243,7 @@ export function validateConfig(raw: unknown): HarnessConfig;
 
 默认值：`{ llm:{provider:'mock'}, workspace:'.', policy:[], tools:{enabled:['read_file','write_file','run_command','run_tests','run_typecheck','run_lint','done']}, sandbox:'fence-only', budget:{maxSteps:15, maxFailures:5}, memory:{filePath:'./.harness-memory.jsonl'}, console:{port:8117, host:'127.0.0.1'} }`。
 
-- [ ] **Step 1: 写失败测试 `tests/config/config.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/config/config.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -284,12 +284,12 @@ describe('config', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/config/config.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/config/config.ts`：
 
@@ -373,7 +373,7 @@ export function loadConfig(filePath: string): HarnessConfig {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/config/config.test.ts`
 Expected: PASS。
@@ -413,7 +413,7 @@ export class SecretError extends Error {}
 - 文件格式（`secrets.json`，`mode: 0o600`）：`{ "version": 1, "kdf": "scrypt", "salt": "<b64>", "check": { "ct": "<b64>", "iv": "<b64>" }, "entries": { "<name>": { "ct": "<b64>", "iv": "<b64>" } } }`。
 - 密钥 = `scrypt(password, salt, 32, { N: 16384, r: 8, p: 1 })`；`check` 字段加密自固定字符串 `"ok"`，用于 `unlock` 验证主密码。`masked` = `'••••' + value.slice(-4)`。
 
-- [ ] **Step 1: 写失败测试 `tests/secret/store.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/secret/store.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -476,12 +476,12 @@ describe('SecretStore', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/secret/store.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/secret/crypto.ts`：
 
@@ -606,7 +606,7 @@ export class SecretStore {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/secret/store.test.ts`
 Expected: PASS。
@@ -659,7 +659,7 @@ export class OpenAICompatClient implements LLMClient {
 }
 ```
 
-- [ ] **Step 1: 写失败测试（三组）**
+- [x] **Step 1: 写失败测试（三组）**
 
 `tests/llm/decode.test.ts`：
 
@@ -750,12 +750,12 @@ describe('OpenAICompatClient', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/llm`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/llm/client.ts`：
 
@@ -840,7 +840,7 @@ export class OpenAICompatClient implements LLMClient {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/llm`
 Expected: PASS。
@@ -892,7 +892,7 @@ export const doneTool: Tool;         // args {summary} → ok:true
 
 - 所有 `invoke` **绝不 throw**：`try/catch` 返回 `{ok:false, error}`。
 
-- [ ] **Step 1: 写失败测试 `tests/tools/registry.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/tools/registry.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -953,12 +953,12 @@ describe('ToolRegistry', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/tools/registry.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/tools/registry.ts`：
 
@@ -1076,7 +1076,7 @@ export const doneTool: Tool = {
 };
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/tools/registry.test.ts`
 Expected: PASS。
@@ -1115,7 +1115,7 @@ export class GuardrailEngine {
 
 - 匹配语义：`run_command` 的匹配目标 = `String(args.command)`，其余工具 = 工具名；`path` 型规则匹配 `args.path`（无 path 则不命中）。命中规则按优先级取最高 tier（BLOCK>ASK>ALLOW），同级取第一条；无命中 → `{tier:'ALLOW', reason:'no rule matched'}`。
 
-- [ ] **Step 1: 写失败测试 `tests/governance/guardrail.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/governance/guardrail.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1162,12 +1162,12 @@ describe('GuardrailEngine', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/governance/guardrail.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/governance/guardrail.ts`：
 
@@ -1227,7 +1227,7 @@ export class GuardrailEngine {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/governance/guardrail.test.ts`
 Expected: PASS。
@@ -1261,7 +1261,7 @@ export class ScopeFence {
 
 - 实现要点：roots 先绝对化 + `realpath`（存在时）；`resolve(target)` = `realpath(path.resolve(root, target))`，比较时 win32 忽略大小写；target 含 `..` 逃逸、符号链接逃逸到 root 外 → 抛 `ScopeViolationError`。
 
-- [ ] **Step 1: 写失败测试 `tests/governance/scope.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/governance/scope.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1303,12 +1303,12 @@ describe('ScopeFence', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/governance/scope.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/governance/scope.ts`：
 
@@ -1352,7 +1352,7 @@ export class ScopeFence {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/governance/scope.test.ts`
 Expected: PASS。
@@ -1389,7 +1389,7 @@ export class ProcessExecutor {
 
 - 实现要点：`spawn(argv[0], argv.slice(1), { cwd, env: 过滤后的 env, shell: false })`；`stdout/stderr` 超过 `maxOutputBytes` 截断；`timeoutMs` 到点 `kill` 并置 `timedOut`；退出码与输出结构化返回。**抛错仅限 spawn 本身失败**（如 cwd 不存在、命令不存在）。
 
-- [ ] **Step 1: 写失败测试 `tests/governance/executor.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/governance/executor.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1437,12 +1437,12 @@ describe('ProcessExecutor', () => {
 }, 10000);
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/governance/executor.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/governance/split.ts`：
 
@@ -1512,7 +1512,7 @@ export class ProcessExecutor {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/governance/executor.test.ts`
 Expected: PASS。
@@ -1561,7 +1561,7 @@ export class HITLStateMachine {
 
 - 语义：仅 `PENDING` 可迁移；`approve` 对已 APPROVED **幂等**返回当前；对 DENIED/TIMED_OUT 抛 `HITLError`；`deny` 同理。
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 `tests/helpers/inmem.ts`：
 
@@ -1643,12 +1643,12 @@ describe('HITLStateMachine', () => {
 
 注意：`decidedBy` 字段需加入 `ActionRequest`（见接口）。若你在接口中未定义该字段，请把它加上（`decidedBy?: string`）。
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/governance/hitl.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/governance/hitl.ts`：
 
@@ -1711,7 +1711,7 @@ export class HITLStateMachine {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/governance/hitl.test.ts`
 Expected: PASS。
@@ -1752,7 +1752,7 @@ export function makeParseFileValidator(
 ): Promise<ToolResult>; // 读取并断言内容满足 predicate → ok:boolean
 ```
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 `tests/feedback/classifier.test.ts`：
 
@@ -1819,12 +1819,12 @@ describe('validators', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/feedback`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/feedback/classifier.ts`：
 
@@ -1895,7 +1895,7 @@ export async function makeParseFileValidator(
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/feedback`
 Expected: PASS。
@@ -1934,7 +1934,7 @@ export class MemoryStore {
 
 - 存储：每行一条 JSON（jsonl）；id 用 `randomUUID`。
 
-- [ ] **Step 1: 写失败测试 `tests/memory/store.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/memory/store.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1978,12 +1978,12 @@ describe('MemoryStore', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/memory/store.test.ts`
 Expected: FAIL。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/memory/store.ts`：
 
@@ -2034,7 +2034,7 @@ export class MemoryStore {
 }
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/memory/store.test.ts`
 Expected: PASS。
@@ -2097,7 +2097,7 @@ export class HarnessSession {
 - 反馈回灌：每条 `StepRecord` 追加进 `messages`（assistant 原文 + `Tool result: ...` + `Feedback: category summary`）；格式化错误/LLM 错误计失败步并回灌 `FORMAT_ERROR`/`OTHER`。
 - BLOCK 与 DENIED/TIMED_OUT 均不执行工具，回灌拒绝原因。
 
-- [ ] **Step 1: 写失败测试 `tests/loop/session.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/loop/session.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -2310,12 +2310,12 @@ describe('HarnessSession', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/loop/session.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/loop/prompt.ts`：
 
@@ -2508,7 +2508,7 @@ async function defaultResolve(hitl: HITLStateMachine) {
 
 注意：`defaultResolve(hitl)` 返回一个函数；请把它写成一个返回闭包的工厂（如上），或在 `SessionDeps` 中默认注入。`decision` 里的 `decided.status` 与 `ActionRequest.status` 类型一致。
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/loop/session.test.ts`
 Expected: PASS。
@@ -2564,7 +2564,7 @@ export class ConsoleServer {
   - `DELETE /api/secrets/:name` → `secrets.unset(name)`
   - `WS /ws` → 通过 `runner.onEvent` 把 `SessionEvent` 广播给所有连接客户端
 
-- [ ] **Step 1: 写失败测试 `tests/console/server.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/console/server.test.ts`**
 
 ```ts
 import { describe, expect, it, beforeEach, afterEach } from 'vitest';
@@ -2656,12 +2656,12 @@ describe('ConsoleServer', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/console/server.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/console/server.ts`：
 
@@ -2833,7 +2833,7 @@ export class ConsoleServer {
 </html>
 ```
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/console/server.test.ts`
 Expected: PASS。
@@ -2887,7 +2887,7 @@ export class DemoSessionRunner implements SessionRunner {
 - `runDemo` 输出三行为证据：① 拦截 `rm -rf`；② TEST_FAILURE 反馈后下一步为 write_file；③ HITL PENDING→APPROVED→执行。
 - `DemoSessionRunner`：维护会话列表（`sessionId`、`status`、`task`、`startedAt`）与事件订阅；`startDemo` 调 `runDemo`（approvals='auto'）并广播事件；`approve/deny` 转发到当前会话的 `hitl`。
 
-- [ ] **Step 1: 写失败测试 `tests/demo/demo.test.ts`**
+- [x] **Step 1: 写失败测试 `tests/demo/demo.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -2925,12 +2925,12 @@ describe('mechanism demo', () => {
 });
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
 Run: `npx vitest run tests/demo/demo.test.ts`
 Expected: FAIL（模块不存在）。
 
-- [ ] **Step 3: 最小实现**
+- [x] **Step 3: 最小实现**
 
 `src/demo/project/sum.js`：
 
@@ -3120,7 +3120,7 @@ if (isDirectRun) {
 
 注意：demo 会话的 `resolveApproval` 设为 `auto`（自动批准），因此通过控制台手动 `approve/deny` 只影响"会话内已存在且仍 PENDING 的请求"；手动审批的完整路径由 `run --task` 的非 demo 模式提供（T12 的 `cliApprover`）。这是有意的设计取舍，请保留。
 
-- [ ] **Step 4: 运行确认通过**
+- [x] **Step 4: 运行确认通过**
 
 Run: `npx vitest run tests/demo/demo.test.ts`
 Expected: PASS（demo 内含真实 `node --test` 执行，需 Node ≥ 20）。
