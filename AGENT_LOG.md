@@ -53,5 +53,15 @@
 - **问题与处理**：无。
 - **下一步**：T6c 进程执行器。
 
+## T6c — 治理 · 进程执行器（ProcessExecutor）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/governance/split.ts`（`splitCommand` 引号感知分词）+ `src/governance/executor.ts`（`ProcessExecutor.run`：`spawn` shell:false、envFilter 剔除 SECRET/KEY/TOKEN/PASSWORD 类环境变量、`maxOutputBytes` 截断、`timeoutMs` kill、错误仅限 spawn 本身失败）+ `tests/governance/executor.test.ts`（6 用例，含超时 kill 与 spawn 失败）。
+- **验证**：TDD 红→绿（模块不存在 → 6/6 通过）；`npm run build` 通过。
+- **关键决策**：stdout/stderr 分别截断；`timedOut` 时 exitCode 为 null；cap 用 `Buffer.byteLength` 计字节而非字符串长度。
+- **问题与处理**：无。
+- **下一步**：T5 工具层。
+
 
 
