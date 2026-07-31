@@ -1,5 +1,7 @@
 # ai4se-harness
 
+- **仓库地址**：https://github.com/NeilChen14/ai4se-harness
+
 A self-hosted coding agent harness. **Agent = LLM + Harness**：LLM 只负责"下一步输出什么动作"，其余全部由确定性代码接管——主循环、工具分发、治理护栏、范围围栏、进程执行、反馈分类、记忆、审批。本项目的核心贡献在**治理/护栏/沙箱**这一维度：拦截、围栏、审批与执行约束全部是代码逻辑，不依赖 LLM 的自觉或提示词。
 
 要求 Node ≥ 20。
