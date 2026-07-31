@@ -611,7 +611,7 @@ export class SecretStore {
 Run: `npx vitest run tests/secret/store.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T3 commit `43794d1`，6/6 通过，build 通过）
 
 ```bash
 git add src/secret tests/secret

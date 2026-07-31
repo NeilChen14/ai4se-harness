@@ -23,3 +23,14 @@
 - **问题与处理**：`npm run build` 因 `src/demo/project`/`src/console/static` 尚不存在（T10/T11 才建）而失败 → build 脚本的两处 `cpSync` 改为 `existsSync` 守卫（T13 目录存在时行为不变）。
 - **下一步**：T3 secret 模块。
 
+## T3 — Secret 模块（主密码加密文件）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/secret/crypto.ts`（scrypt 派生 + AES-256-GCM 加解密，密文尾部附 16B HMAC 标签）+ `src/secret/store.ts`（SecretStore：init/unlock/set/get/unset/list，`mode:0o600`，`list` 掩码 `••••末4位`）。
+- **验证**：TDD 红→绿（6/6 通过）；`npm run build` 通过。
+- **关键决策**：`check` 字段加密固定串 `"ok"` 用于 unlock 验证主密码；密钥仅存进程内 `Buffer`，从不打印明文。
+- **问题与处理**：PLAN 实现代码中 `store.ts` 误从 `node:fs` import `randomBytes`（实际在 `node:crypto`）→ 已改为 `node:crypto` 导入（计划小修正）。
+- **下一步**：T4 llm 抽象层。
+
+
