@@ -198,7 +198,7 @@ jobs:
 Run: `npm install && npm test`
 Expected: PASS（1 条 smoke 测试）。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**（T1 由冷启动分支提交 `4e24150`，合入 `main` 为 `bcf67a6`；此处勾选补全历史遗留）
 
 ```bash
 git add -A
@@ -3529,7 +3529,7 @@ git commit -m "feat(T12): CLI with init/run/console/secrets/policy validate"
 - Consumes: 全部前置 task。
 - Produces: 交付物齐备——`Dockerfile`、`README.md`、`.gitlab-ci.yml` 模板、最终 `npm test` 全绿、最终 CI pass、五交付物（SPEC/PLAN/SPEC_PROCESS/AGENT_LOG/REFLECTION）齐。
 
-- [ ] **Step 1: 写 `Dockerfile`**
+- [x] **Step 1: 写 `Dockerfile`**（另补 `src/cli.ts` 首行 shebang `#!/usr/bin/env node`，保证 `npm i -g` 全局 bin 在 Unix 可直执行）
 
 ```dockerfile
 FROM node:20-alpine AS build
@@ -3561,7 +3561,7 @@ sessions
 .git
 ```
 
-- [ ] **Step 2: 写 `.gitlab-ci.yml` 模板（不作为主 CI，供 NJU GitLab 镜像备选）**
+- [x] **Step 2: 写 `.gitlab-ci.yml` 模板（不作为主 CI，供 NJU GitLab 镜像备选）**
 
 ```yaml
 stages: [test]
@@ -3573,7 +3573,7 @@ unit-test:
     - npm test
 ```
 
-- [ ] **Step 3: 写 `README.md`**（必须包含：项目简介、安装、运行、分发命令、目录结构、安全边界说明、已知限制）
+- [x] **Step 3: 写 `README.md`**（必须包含：项目简介、安装、运行、分发命令、目录结构、安全边界说明、已知限制）
 
 要点（照实写，不夸大）：
 - 简介：Agent = LLM + Harness 的编码 agent harness，主贡献为治理/护栏/沙箱。
@@ -3586,7 +3586,7 @@ unit-test:
 - 已知限制：Node ≥ 20；Windows/Linux 路径行为差异；`run_lint` 依赖项目配置 `npm run lint`；mock demo 为 deterministic scripted，不反映真实 LLM 行为。
 - 目录结构表（src/ 各模块一句话职责）。
 
-- [ ] **Step 4: 收尾验证（全部通过才可宣称完成）**
+- [x] **Step 4: 收尾验证（全部通过才可宣称完成）**（本地全部通过；第 5 项「git push 触发 GitHub Actions」需用户授权推送后由 CI 判定，本地以 `npm test` 等价验证）
 
 Run:
 1. `npm test` → 全绿
@@ -3597,11 +3597,11 @@ Run:
 6. `git log --oneline` 复核各 task 均有 commit（附 PLAN.md 中记录的 hash）
 7. 五交付物齐：`SPEC.md`、`PLAN.md`（全勾选+hash）、`SPEC_PROCESS.md`（含 §4.5 冷启动记录）、`AGENT_LOG.md`（逐 task 记录）、`REFLECTION.md`（1500–2500 字反思，按 §4 通用要求内容）；无缺项
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**（T13 commit `5999b2b`，含 `REFLECTION.md` 与 `src/cli.ts` shebang，见 AGENT_LOG）
 
 ```bash
 git add Dockerfile .dockerignore .gitlab-ci.yml README.md .github
 git commit -m "docs(T13): distribution (Docker), README, gitlab template, final checks"
 ```
 
-- [ ] **Step 6: 更新 PLAN.md（全部勾选 + hash）与 AGENT_LOG.md，提交。**
+- [x] **Step 6: 更新 PLAN.md（全部勾选 + hash）与 AGENT_LOG.md，提交。**（T13 commit `5999b2b`；docs commit 见 git log）
