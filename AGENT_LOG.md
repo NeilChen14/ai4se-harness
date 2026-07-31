@@ -103,5 +103,15 @@
 - **问题与处理**：无。
 - **下一步**：T8 记忆模块（MemoryStore jsonl）。
 
+## T8 — 记忆模块（MemoryStore，jsonl）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/memory/store.ts`（`MemoryStore`：append-only jsonl，`add`/`all`/`query(kind/keywords/limit)`/`summary`）+ `tests/memory/store.test.ts`（4 用例）。
+- **验证**：TDD 红→绿（模块不存在 → 首次 3/4，修正后 4/4）；`npm run build` 通过；`npm test` 全量 61/61 通过。
+- **关键决策**：PLAN 实现缺陷修正——原 `query` 仅按 `ts` 降序排序，同毫秒写入时稳定排序保留文件顺序，`summary(1)` 会取到较旧条目（`BBB` 测试失败）；改为携带文件序号 `i` 作 tiebreaker（`y.i - x.i` 优先较新），语义符合"最近 N 条"。
+- **问题与处理**：无。
+- **下一步**：T9 主循环 HarnessSession。
+
 
 

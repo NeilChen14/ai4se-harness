@@ -2039,7 +2039,7 @@ export class MemoryStore {
 Run: `npx vitest run tests/memory/store.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T8 commit `ea31661`，4/4 通过，build 通过；PLAN 实现缺陷修正见 AGENT_LOG）
 
 ```bash
 git add src/memory tests/memory
