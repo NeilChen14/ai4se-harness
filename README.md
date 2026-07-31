@@ -73,6 +73,8 @@ docker run -p 8117:8117 \
 3. 平台自动分配公网 URL 并配 TLS（https）。
 4. **验收**：打开公网 URL → 页面显示只读横幅、凭据表单隐藏；点「运行 Demo 会话」应输出 ① 拦截 `rm -rf` ② 失败反馈改步 ③ HITL 审批三行日志。凭据 API 写入应返回 403。
 
+**线上实例**：https://ai4se-harness.onrender.com （Render 免费层，只读 mock demo，空闲 15 分钟会休眠，打开时等约一分钟冷启动）。
+
 > 安全：公网实例不开真实 LLM、不接收任何 key（SPEC §4-T4）。开放真实 LLM 需额外授权开关 + TLS 并在反向代理层处理，默认不建议。
 
 ## 凭据安全

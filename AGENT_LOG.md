@@ -172,7 +172,8 @@
 - **验证**：TDD 红→绿（tests/console/server.test.ts 新增 4 用例：config 带 readonly / 未初始化 store 下 GET secrets 返回 [] / POST、DELETE 403 → 11/11 通过）；`npm test` 全量 88/88；`npm run build` 通过；手工端到端——无 secrets 文件 + `AI4SE_READONLY=1` 启动 console，/api/config 含 `readonly:true`、GET /api/secrets 为空、POST 403。
 - **关键决策**：只读模式以环境变量授权（SPEC §4-T4「开真实 LLM 需环境变量授权开关」反向应用）；云端不接真实 LLM、不接收任何 key，凭据 API 服务端强制 403 而非仅隐藏 UI。
 - **问题与处理**：发现既有缺口——非只读 console 的 GET/POST /api/secrets 因 store 未 unlock 会抛 `SecretStore.requireKey`（`'store is locked'`），本地凭据管理在 Web UI 上实际不可用；不在本次范围内，未改动，记录备查。
-- **下一步**：申请免费服务器（Render 优先）→ 按 README「云端部署」部署 → 公网 URL 验收三行 demo + 只读横幅。
+- **部署结果**：Render 免费 Web Service 上线，公网 URL **https://ai4se-harness.onrender.com**（Runtime=Docker，`AI4SE_READONLY=1`）。验收全部通过：`/api/config` 返回 `readonly:true`；`GET /api/secrets` 空；`POST /api/secrets` 403；页面 UTF-8 正常、只读横幅显示、凭据表单隐藏；公网触发 Demo 会话两次均 `status:done`，日志复现 ① step-0 `BLOCK no-rm-rf` 拦截 `rm -rf` ② step-1 测试失败反馈 ③ step-2 `ASK ask-write` HITL 审批。
+- **下一步**：无（SPEC §7/§10-R3/偏离记录 2 的公网云端 WebUI demo 交付完成，交付闭环）。
 
 
 
