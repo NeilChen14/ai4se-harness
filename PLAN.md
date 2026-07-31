@@ -378,7 +378,7 @@ export function loadConfig(filePath: string): HarnessConfig {
 Run: `npx vitest run tests/config/config.test.ts`
 Expected: PASS。
 
-- [ ] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**
+- [x] **Step 5: 提交 + 更新 PLAN.md + AGENT_LOG.md**（T2 commit `9037ec1`，`npm test` 5/5 通过，`npm run build` 通过）
 
 ```bash
 git add src/config tests/config

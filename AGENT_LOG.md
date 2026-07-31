@@ -12,3 +12,14 @@
 - **关键决策**：相对 import 一律 `.js` 后缀（NodeNext）；`build` 脚本用 `cpSync` 复制 `src/demo/project` 与 `src/console/static` 到 dist（T10/T11 目录在 T13 收尾 build 时已存在）。
 - **问题与处理**：主工作区无 node_modules，`npm test` 首次失败 → `npm install` 后通过；npm audit 报 5 个漏洞（多为 dev 依赖传递），不阻塞，后续 T13 复核。
 - **下一步**：T2 config 模块。
+
+## T2 — Config 模块（config）
+
+- **日期**：2026-07-31
+- **状态**：完成
+- **实现**：`src/config/config.ts`（`HarnessConfig`/`PolicyRule`/`ConfigError`/`defaultConfig`/`validateConfig`/`loadConfig`）+ `tests/config/config.test.ts`。
+- **验证**：TDD 红→绿（模块不存在 → 5/5 通过）；`npm run build` 通过。
+- **关键决策**：默认值补齐策略（缺键取默认）、`ConfigError.field` 指明出错字段、tools 白名单过滤非法工具名。
+- **问题与处理**：`npm run build` 因 `src/demo/project`/`src/console/static` 尚不存在（T10/T11 才建）而失败 → build 脚本的两处 `cpSync` 改为 `existsSync` 守卫（T13 目录存在时行为不变）。
+- **下一步**：T3 secret 模块。
+
