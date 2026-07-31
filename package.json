@@ -7,7 +7,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc -p tsconfig.build.json && node -e \"const fs=require('node:fs');fs.cpSync('src/demo/project','dist/demo/project',{recursive:true});fs.cpSync('src/console/static','dist/console/static',{recursive:true})\"",
+    "build": "tsc -p tsconfig.build.json && node -e \"const fs=require('node:fs');if(fs.existsSync('src/demo/project'))fs.cpSync('src/demo/project','dist/demo/project',{recursive:true});if(fs.existsSync('src/console/static'))fs.cpSync('src/console/static','dist/console/static',{recursive:true})\"",
     "demo": "tsx src/demo/demo.ts",
     "dev": "tsx src/cli.ts"
   },
